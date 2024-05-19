@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.commentbot.dao.LabelDao">
+    <resultMap id="labelMap" type="com.commentbot.pojo.vo.LabelVo">
+        <id property="id" column="id"/>
+        <result property="labelContent" column="label_content"/>
+        <result property="labelLevel" column="label_level"/>
+        <collection property="childLabels" ofType="com.commentbot.pojo.vo.LabelVo" select="getChildrenByParentId" column="id"/>
+    </resultMap>
+
+    <select id="getMaxLabels" resultType="com.commentbot.pojo.vo.LabelVo" >
+        SELECT
+            id,
+            label_content,
+            label_level
+        FROM
+            comment_label
+        WHERE
+            label_level = 1
+        AND
+            bot_id = #{botId}
+    </select>
+
+    <select id="getChildrenByParentId" resultMap="labelMap">
+        SELECT
+            id,
+            label_content,
+            label_level
+        FROM
+            comment_label
+        WHERE
+            parent_id = #{parentId}
+    </select>
+
+    <select id="getLabelContentList" resultType="java.lang.String">
+        SELECT label_content
+        FROM comment_label
+        WHERE id IN
+        <foreach item="id" collection="labelIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+</mapper>

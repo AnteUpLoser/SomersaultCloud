@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace="com.b0.mybatis.mapper.UserMapper" -->
+<mapper namespace="com.commentbot.dao.RecordDao">
+    <insert id="insertNewGeneration" parameterType="com.commentbot.pojo.bo.Record">
+        INSERT INTO chat_generation (record_id, chat_id, message, time)
+        VALUES (#{recordId}, #{chatId}, #{message}, #{time})
+    </insert>
+
+    <insert id="insertNewAsk" parameterType="com.commentbot.pojo.bo.Record">
+        INSERT INTO chat_ask (record_id, chat_id, message, time)
+        VALUES (#{recordId}, #{chatId}, #{message}, #{time})
+    </insert>
+
+    <insert id="insertNewRecord" parameterType="com.commentbot.pojo.bo.RecordInfo">
+        <selectKey keyProperty="recordId" resultType="long" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO record_info (chat_id, create_time, reference_id, reference_token)
+        VALUES (#{chatId}, #{createTime}, #{referenceId}, #{referenceToken})
+    </insert>
+
+</mapper>
