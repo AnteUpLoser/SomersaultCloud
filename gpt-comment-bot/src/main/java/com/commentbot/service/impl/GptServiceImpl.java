@@ -18,6 +18,7 @@ import com.commentbot.pojo.gpt.GptReq;
 import com.commentbot.pojo.gpt.GptRes;
 import com.commentbot.pojo.gpt.Message;
 import com.commentbot.service.GptService;
+import com.common.constant.RedisConstants;
 import com.common.redis.RedisService;
 import com.common.utils.TimeUtil;
 import jakarta.annotation.Resource;
@@ -105,8 +106,9 @@ public class GptServiceImpl implements GptService {
         //异步新增聊天记录
         asyncAddGenerationMsg(initLabelReq, resGeneration.getGenerationText());
 
-        //存进redis上下文
-        redisService
+        //TODO 存进redis上下文 可做RPC
+//        long chatId = initLabelReq.getChatId();
+//        redisService.setHalfHourValue(RedisConstants.CHAT+chatId, );
         return resGeneration;
     }
 

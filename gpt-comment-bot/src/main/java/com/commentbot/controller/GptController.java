@@ -30,7 +30,7 @@ public class GptController {
         return R.success(generation, "生成评语成功");
     }
 
-    //后续发送微调文本
+    //后续发送微调文本(使用默认上下文大模型 可以忽略这个接口了)
     @PostMapping("/tune")
     public R<Generation> tune(@RequestHeader String token,
                               @RequestBody AskReq askReq){
