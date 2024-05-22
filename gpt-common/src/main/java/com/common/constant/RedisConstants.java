@@ -10,4 +10,5 @@ public class RedisConstants {
     public static final String USER_TOKEN = "user:token:";
     public static final String BOT_LABELS = "bot:labels:";
     public static final String CHAT = "chat:";
+    public static final String BOT_CONFIG_CACHE = "bot:config:id:";
 }

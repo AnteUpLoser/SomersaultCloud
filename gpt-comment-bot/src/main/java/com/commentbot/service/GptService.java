@@ -8,7 +8,6 @@ public interface GptService {
     //生成第一次的评语
     Generation initGeneration(InitLabelReq initLabelReq);
 
-    //后续对评语的微调
-    Generation tuneBack(AskReq askReq);
+
 
 }

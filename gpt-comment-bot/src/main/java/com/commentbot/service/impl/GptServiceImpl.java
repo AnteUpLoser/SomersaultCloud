@@ -67,7 +67,7 @@ public class GptServiceImpl implements GptService {
     @Override
     public Generation initGeneration(InitLabelReq initLabelReq) {
         //获取机器人配置信息
-        BotConfig botConfig = botConfDao.selectById(initLabelReq.getBotId());
+        BotConfig botConfig = fetchAndCacheBotConfig(initLabelReq.getBotId());
 
         //获取标签的内容
         String performance = labelDao.getLabelContentList(initLabelReq.getPerfLabelIds()).toString();
@@ -109,28 +109,22 @@ public class GptServiceImpl implements GptService {
         //TODO 存进redis上下文 可做RPC
 //        long chatId = initLabelReq.getChatId();
 //        redisService.setHalfHourValue(RedisConstants.CHAT+chatId, );
+
         return resGeneration;
     }
-
 
     /**
-     * 后续供用户对评语的微调
-     * @param askReq 前端请求体
-     * @return generation 响应体
+     * 获取botConfig
+     * @param botId 机器人id
+     * @return 机器人配置信息 botConfig
      */
-    @Override
-    public Generation tuneBack(AskReq askReq) {
-        BotConfig botConfig = botConfDao.selectById(askReq.getBotId());
-        GptRes gptRes = sendMsg(askReq.getMessage(), botConfig);
-        //对聊天记录的操作---
-
-
-        GptChoices gptChoices = gptRes.getChoices().get(0);
-        Generation resGeneration = new Generation();
-        resGeneration.setGenerationText(gptChoices.getMessage().getContent())
-                .setFinishReason(gptChoices.getFinishReason());
-        return resGeneration;
+    public BotConfig fetchAndCacheBotConfig(long botId){
+        String botConfigCache = redisService.getValue(RedisConstants.BOT_CONFIG_CACHE+botId);
+        if(botConfigCache != null) return JSON.parseObject(botConfigCache, BotConfig.class);
+        return botConfDao.selectById(botId);
     }
+
+
 
 
     /**

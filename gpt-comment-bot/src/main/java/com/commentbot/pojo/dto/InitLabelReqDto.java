@@ -50,7 +50,7 @@ public class InitLabelReqDto {
     }
 
     public InitLabelReqDto  setCoopSug(String coopSug) {
-        this.coopSug = "[[" + coopSug + "]]";
+        this.coopSug = "{" + coopSug + "}";
         return this;
     }
 }

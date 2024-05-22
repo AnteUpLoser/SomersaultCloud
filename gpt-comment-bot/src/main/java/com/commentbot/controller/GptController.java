@@ -31,12 +31,6 @@ public class GptController {
     }
 
     //后续发送微调文本(使用默认上下文大模型 可以忽略这个接口了)
-    @PostMapping("/tune")
-    public R<Generation> tune(@RequestHeader String token,
-                              @RequestBody AskReq askReq){
-        if(!JwtUtil.isValidJwt(token)) return R.error(ResultCode.VALIDATE_FAILED, "无效用户令牌");
-        Generation generation = gptService.tuneBack(askReq);
-        return R.success(generation, "微调成功");
-    }
+
 
 }
