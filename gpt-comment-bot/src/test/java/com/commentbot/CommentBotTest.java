@@ -1,5 +1,6 @@
 package com.commentbot;
 
+import com.commentbot.config.GptConfig;
 import com.commentbot.dao.BotConfDao;
 import com.commentbot.dao.LabelDao;
 import com.commentbot.dao.RecordDao;
@@ -9,7 +10,6 @@ import com.commentbot.pojo.gpt.GptReq;
 import com.commentbot.service.GptService;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
@@ -25,8 +25,9 @@ public class CommentBotTest {
 
     @Resource
     private LabelDao labelDao;
-    @Value("${bot.sk}")
-    private String sk;
+
+    @Resource
+    private GptConfig gptConfig;
 
     @Test
     public void labelDaoTest(){
@@ -59,5 +60,12 @@ public class CommentBotTest {
         recordInfo.setChatId(-1);
         System.out.println(recordDao.insertNewRecord(recordInfo));
         System.out.println(recordInfo);
+    }
+
+    @Test
+    public void test04(){
+        System.out.println(gptConfig);
+        System.out.println(gptConfig.getApiUrl());
+        System.out.println(gptConfig.getSk());
     }
 }

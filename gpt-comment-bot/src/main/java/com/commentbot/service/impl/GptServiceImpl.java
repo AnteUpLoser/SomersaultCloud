@@ -1,22 +1,19 @@
 package com.commentbot.service.impl;
 
-
 import com.alibaba.fastjson.JSON;
+import com.commentbot.config.GptConfig;
 import com.commentbot.dao.BotConfDao;
-import com.commentbot.dao.ChatDao;
 import com.commentbot.dao.LabelDao;
 import com.commentbot.dao.RecordDao;
 import com.commentbot.pojo.bo.BotConfig;
 import com.commentbot.pojo.bo.Record;
 import com.commentbot.pojo.bo.RecordInfo;
 import com.commentbot.pojo.dto.InitLabelReqDto;
-import com.commentbot.pojo.dto.req.AskReq;
 import com.commentbot.pojo.dto.req.InitLabelReq;
 import com.commentbot.pojo.dto.res.Generation;
 import com.commentbot.pojo.gpt.GptChoices;
 import com.commentbot.pojo.gpt.GptReq;
 import com.commentbot.pojo.gpt.GptRes;
-import com.commentbot.pojo.gpt.Message;
 import com.commentbot.service.GptService;
 import com.common.constant.RedisConstants;
 import com.common.redis.RedisService;
@@ -25,11 +22,9 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.Objects;
@@ -39,8 +34,6 @@ import java.util.concurrent.CompletableFuture;
 @Service
 public class GptServiceImpl implements GptService {
     @Resource
-    private ChatDao chatDao;
-    @Resource
     private RedisService redisService;
     @Resource
     private LabelDao labelDao;
@@ -48,16 +41,9 @@ public class GptServiceImpl implements GptService {
     private BotConfDao botConfDao;
     @Resource
     private RecordDao recordDao;
-
     //gpt请求配置
-    @Value("${bot.sk}")
-    private String SK;
-    @Value("${bot.api-url}")
-    private String API_URL;
-    @Value("${bot.proxy-port}")
-    private int PROXY_PORT;
-    @Value("${bot.proxy-hostname}")
-    private String PROXY_HOSTNAME;
+    @Resource
+    private GptConfig gptConfig;
 
     /**
      * 第一次生成评语 业务实现
@@ -149,20 +135,13 @@ public class GptServiceImpl implements GptService {
         CompletableFuture.runAsync(() -> recordDao.insertNewGeneration(generation));
     }
 
-    private void asyncSaveAsk(Record ask){
-        CompletableFuture.runAsync(() -> recordDao.insertNewAsk(ask));
-    }
-
-
-
-
 
 
 
     //请求官方api的函数
     public GptRes sendMsg(String reqString, BotConfig botConfig){
         // 创建代理服务器的主机和端口
-        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(PROXY_HOSTNAME, PROXY_PORT));
+        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(gptConfig.getProxyHostname(), gptConfig.getProxyPort()));
         // 创建 OkHttpClient.Builder 实例，并配置代理
         OkHttpClient.Builder builder = new OkHttpClient.Builder().proxy(proxy);
         // 创建 OkHttpClient 实例
@@ -178,9 +157,9 @@ public class GptServiceImpl implements GptService {
 
         // 创建 POST 请求
         Request request = new Request.Builder()
-                .url(API_URL)
+                .url(gptConfig.getApiUrl())
                 .addHeader("Content-Type", "application/json")
-                .addHeader("Authorization", "Bearer " + SK)
+                .addHeader("Authorization", "Bearer " + gptConfig.getSk())
                 .post(requestBody)
                 .build();
         System.out.println(request);
