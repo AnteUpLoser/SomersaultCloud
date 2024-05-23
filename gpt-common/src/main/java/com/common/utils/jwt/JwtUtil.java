@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JwtUtil {
+public final class JwtUtil {
 
     private static final String SIGN_KEY = "SomersaultCloud";
     //    private static final Long EXPIRE = 43200000L; //12h

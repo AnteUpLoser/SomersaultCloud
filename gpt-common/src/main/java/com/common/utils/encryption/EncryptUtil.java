@@ -5,7 +5,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
-public class EncryptUtil {
+public final class EncryptUtil {
 
     private static final String salt = "SomersaultCloud";
 

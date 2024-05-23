@@ -10,13 +10,18 @@ import lombok.Data;
  */
 
 @Data
-public class R<T> {
+public final class R<T> {
 
     private Integer code; //返回响应码;
 
     private String msg; //携带的响应信息;
 
     private T data; //响应数据
+
+    /**
+     * 防止私有化实例
+     */
+    private R(){}
 
     /**
      * 自定义有参构造方法

@@ -12,7 +12,7 @@ import java.util.Random;
 /**
  * 生成验证码工具类
  */
-public class CheckCodeUtil {
+public final class CheckCodeUtil {
 
     public static final String VERIFY_CODES = "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final Random random = new Random();
