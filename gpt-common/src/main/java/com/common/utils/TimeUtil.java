@@ -1,6 +1,6 @@
 package com.common.utils;
 
-public class TimeUtil {
+public final class TimeUtil {
 
     private TimeUtil(){}
 

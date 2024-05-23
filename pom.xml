@@ -14,7 +14,7 @@
     <modules>
         <module>gpt-common</module>
         <module>gpt-comment-bot</module>
-        <module>gpt-user-login</module>
+        <module>gpt-user</module>
     </modules>
 
 
