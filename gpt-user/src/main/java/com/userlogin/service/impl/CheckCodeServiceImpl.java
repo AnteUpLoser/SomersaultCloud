@@ -10,26 +10,28 @@ import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
-public class CheckCodeServiceImpl  implements CheckCodeService {
+public class CheckCodeServiceImpl implements CheckCodeService {
     @Resource
     private RedisService redisService;
 
-    public String getCheckCodeImg(HttpServletResponse response, CheckCode checkCode) {
+    public String getCheckCodeImg(CheckCode checkCode) {
         //客户端发的sessionID
         String sessionID = checkCode.getSessionID();
-        ServletOutputStream os;
-        String checkCodeImg = null;
         try {
-            os = response.getOutputStream();
-            checkCodeImg = CheckCodeUtil.outputVerifyImage(checkCode.getWidth(), checkCode.getHeight(), os, checkCode.getVerifySize());
+            Map<String,String> map = CheckCodeUtil.outputVerifyImage(checkCode.getWidth(), checkCode.getHeight(), checkCode.getVerifySize());
+            String verifyCode = map.get("verifyCode");
+            String Base64 = map.get("Base64");
+            //设置了验证码有效期为一分钟
+            redisService.setOneMinValue(RedisConstants.REGISTER_CHECK_CODE+sessionID, verifyCode);
+            return Base64;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //设置了验证码有效期为一分钟
-        redisService.setOneMinValue(RedisConstants.REGISTER_CHECK_CODE+sessionID,checkCodeImg);
-        return checkCodeImg;
+        return "验证码生成错误";
     }
 
     public String recheckCodeIsTrue(String sessionID, String checkCode) {

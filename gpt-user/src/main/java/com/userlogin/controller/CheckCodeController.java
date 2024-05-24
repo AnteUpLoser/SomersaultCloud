@@ -21,8 +21,8 @@ public class CheckCodeController {
 
     //获取验证码及图片
     @PostMapping("/checkCodeImage")
-    public String checkCode(HttpServletResponse response, @RequestBody CheckCode checkCode){
-        return checkCodeService.getCheckCodeImg(response, checkCode);
+    public String checkCode(@RequestBody CheckCode checkCode){
+        return checkCodeService.getCheckCodeImg(checkCode);
     }
 
 

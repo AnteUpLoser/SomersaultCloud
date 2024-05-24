@@ -6,8 +6,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.Arrays;
-import java.util.Random;
+import java.util.*;
 
 /**
  * 生成验证码工具类
@@ -27,14 +26,18 @@ public final class CheckCodeUtil {
      *
      * @param width 图片宽度
      * @param height 图片高度
-     * @param os  输出流
      * @param verifySize 数据长度
      * @return 验证码数据
      */
-    public static String outputVerifyImage(int width, int height, OutputStream os, int verifySize) throws IOException {
+    public static Map<String, String> outputVerifyImage(int width, int height, int verifySize) throws IOException {
         String verifyCode = generateVerifyCode(verifySize);
-        outputImage(width, height, os, verifyCode);
-        return verifyCode;
+        ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
+        //将图片写入响应流
+        OutputStream os = outputImage(width, height, byteArrayOS, verifyCode);
+        Map<String, String> resMap = new HashMap<>();
+        resMap.put("Base64",os.toString());
+        resMap.put("verifyCode", verifyCode);
+        return resMap;
     }
 
     /**
@@ -72,7 +75,7 @@ public final class CheckCodeUtil {
      * 输出指定验证码图片流
      *
      */
-    public static void outputImage(int w, int h, OutputStream os, String code) throws IOException {
+    public static OutputStream outputImage(int w, int h, OutputStream os, String code) throws IOException {
         int verifySize = code.length();
         BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
         Random rand = new Random();
@@ -138,7 +141,19 @@ public final class CheckCodeUtil {
         }
 
         g2.dispose();
-        ImageIO.write(image, "jpg", os);
+        // 将图片数据写入 ByteArrayOutputStream
+        ByteArrayOutputStream bAOS = new ByteArrayOutputStream();
+        ImageIO.write(image, "jpg", bAOS);
+        bAOS.flush();
+
+        // 将 ByteArrayOutputStream 中的数据转换为 Base64 编码的字符串
+        byte[] imageBytes = bAOS.toByteArray();
+        String base64EncodedImage = Base64.getEncoder().encodeToString(imageBytes);
+
+        // 将 Base64 编码的字符串写入到输出流中
+        os.write(base64EncodedImage.getBytes());
+        os.flush();
+        return os;
     }
 
     /**
