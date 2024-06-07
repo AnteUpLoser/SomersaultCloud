@@ -15,8 +15,8 @@ public final class EncryptUtil {
     private EncryptUtil(){}
 
 
-    //SHAForRegister 还要加用户唯一标识盐 (这里用了邮箱)
-    public static String SHAForRegister(String input, String email) {
+    //SHAForPwd 还要加用户唯一标识盐 (这里用了邮箱)
+    public static String SHAForUserPwd(String input, String email) {
         try {
             //加自定义盐
             input = input+salt+email;

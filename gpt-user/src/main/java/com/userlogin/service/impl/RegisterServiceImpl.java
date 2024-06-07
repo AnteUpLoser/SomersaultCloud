@@ -26,7 +26,7 @@ public class RegisterServiceImpl extends ServiceImpl<RegisterDao, RegisterDto> i
      * @return jwt
      */
     public String userRegister(RegisterDto registerDto){
-        String password = EncryptUtil.SHAForRegister(registerDto.getPassword(), registerDto.getUserEmail());
+        String password = EncryptUtil.SHAForUserPwd(registerDto.getPassword(), registerDto.getUserEmail());
 
         registerDto.setPassword(password);
         registerDao.insert(registerDto);

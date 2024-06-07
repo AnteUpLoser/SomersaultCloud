@@ -21,7 +21,8 @@ public enum ResultCode {
     FORBIDDEN(403, "没有相关权限"),
 
     //自用
-    VALIDATE_FAILED(405, "参数检验失败");
+    VALIDATE_FAILED(405, "参数检验失败"),
+    PARAMETER_NOT_EXIST(406, "参数不存在");
 
     private final int code;
     private final String message;

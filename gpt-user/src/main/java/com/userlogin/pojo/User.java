@@ -2,9 +2,11 @@ package com.userlogin.pojo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 @Data
+@TableName("user_info")
 public class User {
     //用户id
     @TableId(type = IdType.AUTO)
@@ -14,7 +16,6 @@ public class User {
     //用户密码
     private String password;
     //gender(可null)
-
 
     //用户邮箱(可null)
     private String userEmail;

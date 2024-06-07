@@ -5,7 +5,6 @@ import com.common.pojo.R;
 import com.userlogin.pojo.CheckCode;
 import com.userlogin.service.CheckCodeService;
 import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 

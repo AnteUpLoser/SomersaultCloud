@@ -1,6 +1,7 @@
 package com.userlogin.service;
 
-import com.userlogin.pojo.Email;
+import com.userlogin.pojo.EmailCode;
+import com.userlogin.pojo.dto.EmailFindPwdDto;
 
 
 public interface EmailService {
@@ -8,5 +9,12 @@ public interface EmailService {
     String sendRegisterMail(String mailAddress);
 
     //校验注册邮箱的验证码
-    boolean checkRegisterMail(Email email);
+    boolean recheckRegisterMailCode(EmailCode email);
+
+    //发送找回密码邮箱
+    String sendForgotPwdMail(String mailAddress);
+
+    //验证找回密码邮箱验证码
+    boolean recheckForgotPwdMailCode(EmailFindPwdDto emailFindPwdDto);
+
 }
